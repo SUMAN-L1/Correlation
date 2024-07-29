@@ -19,15 +19,24 @@ def correlation_significance(data):
     
     return p_values
 
+# Function to attempt reading a CSV file with different encodings
+def read_csv_with_encodings(file, encodings=['utf-8', 'latin1', 'ISO-8859-1']):
+    for encoding in encodings:
+        try:
+            return pd.read_csv(file, encoding=encoding, header=None)
+        except UnicodeDecodeError:
+            continue
+    raise ValueError("Unable to decode the file with the provided encodings.")
+
 # Streamlit app
 st.title('Correlation Analysis Tool')
 
 # Upload CSV file
-uploaded_file = st.file_uploader("Upload a CSV file", type=("xlsx","csv", "xls"))
+uploaded_file = st.file_uploader("Upload a CSV file", type="csv")
 if uploaded_file:
     try:
-        # Try to read the data with different encodings and headers
-        data = pd.read_csv(uploaded_file, encoding='utf-8', header=None)
+        # Try to read the data with multiple encodings
+        data = read_csv_with_encodings(uploaded_file)
         if data.empty:
             raise ValueError("The file is empty or could not be parsed.")
         
@@ -89,6 +98,6 @@ if uploaded_file:
     except pd.errors.EmptyDataError:
         st.error("No columns to parse from file. The file might be empty or improperly formatted.")
     except UnicodeDecodeError:
-        st.error("Unable to decode the file. Please check the file encoding.")
+        st.error("Unable to decode the file. Please check the file encoding or use a different encoding.")
     except Exception as e:
         st.error(f"An unexpected error occurred: {e}")
