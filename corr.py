@@ -44,7 +44,7 @@ def read_file(file, file_type):
 st.title('Correlation Analysis Tool')
 
 # Upload file
-uploaded_file = st.file_uploader("Upload a CSV or Excel file", type=["csv", "xlsx", "xls"])
+uploaded_file = st.file_uploader("Upload a CSV or Excel file", type=("csv", "xlsx", "xls"))
 if uploaded_file:
     file_type = uploaded_file.type.split('/')[1]
 
