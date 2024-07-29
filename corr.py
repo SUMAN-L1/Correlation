@@ -32,7 +32,7 @@ def read_csv_with_encodings(file, encodings=['utf-8', 'latin1', 'ISO-8859-1']):
 st.title('Correlation Analysis Tool')
 
 # Upload CSV file
-uploaded_file = st.file_uploader("Upload a CSV file", type=("xlsx", "xls","csv")
+uploaded_file = st.file_uploader("Upload a CSV file", type=("xlsx", "xls","csv"))
 if uploaded_file:
     try:
         # Try to read the data with multiple encodings
