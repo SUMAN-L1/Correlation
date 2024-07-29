@@ -23,7 +23,7 @@ def correlation_significance(data):
 st.title('Correlation Analysis Tool')
 
 # Upload CSV file
-uploaded_file = st.file_uploader("Upload a CSV file", type=("xlsx","csv", "xls")
+uploaded_file = st.file_uploader("Upload a CSV file", type=("xlsx","csv", "xls"))
 if uploaded_file:
     try:
         # Try to read the data with different encodings and headers
