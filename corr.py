@@ -23,20 +23,34 @@ def correlation_significance(data):
 def read_csv_with_encodings(file, encodings=['utf-8', 'latin1', 'ISO-8859-1']):
     for encoding in encodings:
         try:
-            return pd.read_csv(file, encoding=encoding, header=None)
+            return pd.read_csv(file, encoding=encoding)
         except UnicodeDecodeError:
             continue
     raise ValueError("Unable to decode the file with the provided encodings.")
 
+# Function to read data from uploaded file
+def read_file(file, file_type):
+    if file_type == 'csv':
+        return read_csv_with_encodings(file)
+    elif file_type == 'xlsx':
+        try:
+            return pd.read_excel(file)
+        except Exception as e:
+            raise ValueError(f"Unable to read the Excel file. Error: {e}")
+    else:
+        raise ValueError("Unsupported file type. Please upload a CSV or Excel file.")
+
 # Streamlit app
 st.title('Correlation Analysis Tool')
 
-# Upload CSV file
-uploaded_file = st.file_uploader("Upload a CSV file", type=("xlsx", "xls","csv"))
+# Upload file
+uploaded_file = st.file_uploader("Upload a CSV or Excel file", type=["csv", "xlsx"])
 if uploaded_file:
+    file_type = uploaded_file.type.split('/')[1]
+
     try:
-        # Try to read the data with multiple encodings
-        data = read_csv_with_encodings(uploaded_file)
+        # Read the file
+        data = read_file(uploaded_file, file_type)
         if data.empty:
             raise ValueError("The file is empty or could not be parsed.")
         
@@ -45,12 +59,12 @@ if uploaded_file:
         st.write(data.head())
 
         # Check if the first row should be used as headers
-        if not data.columns.str.contains('Unnamed').all():
+        if data.columns[0] == 'Unnamed: 0':
             data.columns = data.iloc[0]  # Use the first row as column headers
             data = data[1:]  # Remove the header row from the data
-        else:
-            # Reset the column names if no meaningful header was found
-            data.columns = [f'Column_{i}' for i in range(data.shape[1])]
+
+        # Reset the index
+        data.reset_index(drop=True, inplace=True)
 
         # Check for empty data
         if data.empty:
