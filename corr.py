@@ -41,7 +41,7 @@ def read_file(file, file_type):
         raise ValueError("Unsupported file type. Please upload a CSV or Excel file.")
 
 # Streamlit app
-st.title('Correlation Analysis Tool')
+st.title('Correlation Analysis Tool_Suman_Econ')
 
 # Upload file
 uploaded_file = st.file_uploader("Upload a CSV or Excel file", type=("csv", "xlsx", "xls"))
@@ -82,7 +82,7 @@ if uploaded_file:
 
         # Compute significance levels
         p_values = correlation_significance(data)
-        st.write("P-values for Correlation Significance:")
+        st.write("P-values for Correlation Significance @5%:")
         st.write(p_values)
 
         # Plot Correlation Heatmap
